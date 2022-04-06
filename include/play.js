@@ -1,10 +1,10 @@
 const ytdl = require("erit-ytdl");
 const scdl = require("soundcloud-downloader").default;
-const { canModifyQueue, STAY_TIME } = require("../util/PreobotUtil");
-const {EMOJI_ARROW , EMOJI_STARTED_PLAYING , EMOJI_DONE }= require('../config.json');
+const { canModifyQueue, STAY_TIME } = require("../config.json");
+const { }= require('../config.json');
 module.exports = {
   async play(song, message) {
-    const { SOUNDCLOUD_CLIENT_ID } = require("../util/PreobotUtil");
+    const { SOUNDCLOUD_CLIENT_ID } = require("../config.json");
 
     let config;
 
@@ -20,7 +20,7 @@ module.exports = {
 
     if (!song) {
       if (queue.connection.dispatcher && message.guild.me.voice.channel) return;
-    queue.textChannel.send(`I'have played all the songs, Now my queue list is empty! ,i'm in vc just  **${message.client.prefix}p <song name>** ,to play song`).catch(console.error);
+    queue.textChannel.send(``).catch(console.error);
     return message.client.queue.delete(message.guild.id);
   }
 
@@ -80,18 +80,15 @@ module.exports = {
       
    
       
-var playingMessage = await queue.textChannel.send(`
-${EMOJI_STARTED_PLAYING} Started playing : 
-${EMOJI_ARROW} ***NAME :*** ${song.title} 
-${EMOJI_ARROW} ***LINK :*** ${song.url}`);
+var playingMessage = await queue.textChannel.send(`  `);
 
-      await playingMessage.react("⏭");
-      await playingMessage.react("⏸");
-      await playingMessage.react("🔇");
-      await playingMessage.react("🔉");
-      await playingMessage.react("🔊");
-      await playingMessage.react("🔁");
-      await playingMessage.react("⏹");
+      await playingMessage.react("");
+      await playingMessage.react("");
+      await playingMessage.react("");
+      await playingMessage.react("");
+      await playingMessage.react("");
+      await playingMessage.react("");
+      await playingMessage.react("");
     } catch (error) {
       console.error(error);
     }
@@ -106,77 +103,77 @@ ${EMOJI_ARROW} ***LINK :*** ${song.url}`);
       const member = message.guild.member(user);
 
       switch (reaction.emoji.name) {
-        case "⏭":
+        case "":
           queue.playing = true;
           reaction.users.remove(user).catch(console.error);
           if (!canModifyQueue(member)) return;
           queue.connection.dispatcher.end();
-          queue.textChannel.send(`⏩ skipped the song`).catch(console.error);
+          queue.textChannel.send(` se saltó la canción`).catch(console.error);
           collector.stop();
           break;
 
-        case "⏸":
+        case "":
           reaction.users.remove(user).catch(console.error);
           if (!canModifyQueue(member)) return;
           if (queue.playing) {
             queue.playing = !queue.playing;
             queue.connection.dispatcher.pause(true);
-            queue.textChannel.send(`⏸ paused the music.`).catch(console.error);
+            queue.textChannel.send(`se pausó la música.`).catch(console.error);
           } else {
             queue.playing = !queue.playing;
             queue.connection.dispatcher.resume();
-            queue.textChannel.send(`▶ resumed the music!`).catch(console.error);
+            queue.textChannel.send(`se retomó la música!`).catch(console.error);
           }
           break;
 
-        case "🔇":
+        case "":
           reaction.users.remove(user).catch(console.error);
           if (!canModifyQueue(member)) return;
           if (queue.volume <= 0) {
             queue.volume = 100;
             queue.connection.dispatcher.setVolumeLogarithmic(100 / 100);
-            queue.textChannel.send(`🔊 unmuted the music!`).catch(console.error);
+            queue.textChannel.send(`silenciar la música!`).catch(console.error);
           } else {
             queue.volume = 0;
             queue.connection.dispatcher.setVolumeLogarithmic(0);
-            queue.textChannel.send(`🔇 muted the music!`).catch(console.error);
+            queue.textChannel.send(`se  silenció la música!`).catch(console.error);
           }
           break;
 
-        case "🔉":
+        case "":
           reaction.users.remove(user).catch(console.error);
           if (!canModifyQueue(member) || queue.volume == 0) return;
           if (queue.volume - 10 <= 0) queue.volume = 0;
           else queue.volume = queue.volume - 10;
           queue.connection.dispatcher.setVolumeLogarithmic(queue.volume / 100);
           queue.textChannel
-            .send(`🔉 decreased the volume, the volume is now ${queue.volume}%`)
+            .send(`se disminuyó el volumen, el volumen ahora es ${queue.volume}%`)
             .catch(console.error);
           break;
 
-        case "🔊":
+        case "":
           reaction.users.remove(user).catch(console.error);
           if (!canModifyQueue(member) || queue.volume == 100) return;
           if (queue.volume + 10 >= 100) queue.volume = 100;
           else queue.volume = queue.volume + 10;
           queue.connection.dispatcher.setVolumeLogarithmic(queue.volume / 100);
           queue.textChannel
-            .send(`🔊 increased the volume, the volume is now ${queue.volume}%`)
+            .send(`se aumentó el volumen, el volumen ahora es ${queue.volume}%`)
             .catch(console.error);
           break;
 
-        case "🔁":
+        case "":
           reaction.users.remove(user).catch(console.error);
           if (!canModifyQueue(member)) return;
           queue.loop = !queue.loop;
-          queue.textChannel.send(`${EMOJI_DONE} Loop is now ${queue.loop ? "**on**" : "**off**"}`).catch(console.error);
+          queue.textChannel.send(` el bucle es ahora${queue.loop ? "**on**" : "**off**"}   `).catch(console.error);
           break;
 
-        case "⏹":
+        case "":
           reaction.users.remove(user).catch(console.error);
           if (!canModifyQueue(member)) return;
           queue.songs = [];
-          queue.textChannel.send(`${EMOJI_DONE} stopped the music!`).catch(console.error);
+          queue.textChannel.send(`se detuvo la música. `).catch(console.error);
           try {
             queue.connection.dispatcher.end();
           } catch (error) {
