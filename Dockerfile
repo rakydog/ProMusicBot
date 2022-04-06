@@ -1,23 +1,20 @@
 FROM node:12.19-slim
 
-ENV USER=evobot
+ENV USER=Raky Music
 
-# install python and make
 RUN apt-get update && \
 	apt-get install -y python3 build-essential && \
 	apt-get purge -y --auto-remove
-	
-# create evobot user
+
 RUN groupadd -r ${USER} && \
-	useradd --create-home --home /home/evobot -r -g ${USER} ${USER}
-	
-# set up volume and user
+	useradd --create-home --home /home/Raky Music -r -g ${USER} ${USER}
+
 USER ${USER}
-WORKDIR /home/evobot
+WORKDIR /home/Raky Music
 
 COPY package*.json ./
 RUN npm install 
-VOLUME [ "/home/evobot" ]
+VOLUME [ "/home/Raky Music" ]
 
 COPY . .
 

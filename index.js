@@ -1,39 +1,43 @@
-/**
- * Module Imports
- */
 const { Client, Collection } = require("discord.js");
 const { readdirSync } = require("fs");
 const { join } = require("path");
-const { TOKEN, PREFIX } = require("./util/PreobotUtil");
+const { PREFIX } = require("./config.json");
 const client = new Client({ disableMentions: "everyone" });
 
-client.login(TOKEN);
+const express = require('express');
+const app = express();
+const port = 3000 || 8000 || 5500;
+
+app.get('/', (req ,res) => {
+  res.send("Bot is online")
+});
+
+app.listen(port, () => {
+  console.log(`Server listening at https://localhost:${port}`)
+})
+
+
+client.login(process.env.TOKEN);
 client.commands = new Collection();
 client.prefix = PREFIX;
 client.queue = new Map();
 const cooldowns = new Collection();
 const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const {BOT_PREFIX, BOT_STATUS2, BOT_STATUS3 , BOT_PRESENCE } = require('./config.json');
+const { BOT_PREFIX, BOT_STATUS2, BOT_STATUS3, BOT_PRESENCE } = require('./config.json');
 
-/**
- * Client Events
- */
 client.on("ready", () => {
-   function randomStatus() {
- let status = [`${BOT_STATUS2}`,`${BOT_STATUS3}`, `${BOT_PREFIX}play ON ${client.guilds.cache.size} Servers`]
-let rstatus = Math.floor(Math.random() * status.length);
+  function randomStatus() {
+    let status = [`${BOT_STATUS2}`, `${BOT_STATUS3}`, `${BOT_PREFIX}play ON ${client.guilds.cache.size} Servers`]
+    let rstatus = Math.floor(Math.random() * status.length);
 
-client.user.setActivity(status[rstatus], {type: `${BOT_PRESENCE}` });
-}; setInterval(randomStatus, 30000)
+    client.user.setActivity(status[rstatus], { type: `${BOT_PRESENCE}` });
+  }; setInterval(randomStatus, 30000)
 
-console.log('Bot is ready to play songs !')
+  console.log('Bot is ready to play songs !')
 })
 client.on("warn", (info) => console.log(info));
 client.on("error", console.error);
 
-/**
- * Import all commands
- */
 const commandFiles = readdirSync(join(__dirname, "commands")).filter((file) => file.endsWith(".js"));
 for (const file of commandFiles) {
   const command = require(join(__dirname, "commands", `${file}`));
@@ -71,9 +75,7 @@ client.on("message", async (message) => {
 
     if (now < expirationTime) {
       const timeLeft = (expirationTime - now) / 1000;
-      return message.reply(
-        `please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`
-      );
+      return message.reply(`espere por favor ${timeLeft.toFixed(1)} Más segundos antes de reutilizar el \`${command.name}\` comando.`);
     }
   }
 
@@ -84,7 +86,7 @@ client.on("message", async (message) => {
     command.execute(message, args);
   } catch (error) {
     console.error(error);
-    message.reply("There was an error executing that command.").catch(console.error);
+    message.reply("Hubo un error al ejecutar ese comando.").catch(console.error);
   }
 });
 
