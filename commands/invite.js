@@ -13,18 +13,15 @@ module.exports = {
     var permissions = 70282305;
 
     let invite = new MessageEmbed()
-      .setTitle(`**SUPPORT SERVER**`)
+      .setTitle(`**SERVIDOR DE SOPORTE**`)
       .setDescription(
 
 
-`${EMOJI_ARROW} **Invite me with Normal Perms [(Click Here)](https://discord.com/oauth2/authorize?client_id=${BOT_ID}&permissions=${permissions}&scope=bot)**
+`${EMOJI_ARROW} **Invítame con Permanentes Normales [(Click Aquí)](https://discord.com/api/oauth2/authorize?client_id=951170318410588212&permissions=2205157905&response_type=code&scope=identify%20bot%20applications.commands)**
 
-${EMOJI_ARROW}  **Invite me with Admin Perms [(Click Here)](https://discord.com/api/oauth2/authorize?client_id=${BOT_ID}&permissions=8&scope=bot)**
+${EMOJI_ARROW}  **Invitarme con permisos de administración [(Haga clic aquí)](https://discord.com/api/oauth2/authorize?client_id=951170318410588212&permissions=2205157905&response_type=code&scope=identify%20bot%20applications.commands)**
 `
-
-      
-      
-        
+          
       )
       .setURL(
         `${SERVER_INVITE}`
@@ -36,4 +33,4 @@ ${EMOJI_ARROW}  **Invite me with Admin Perms [(Click Here)](https://discord.com/
 
 
 
-console.log("invite working")
+console.log("invite funcionado")

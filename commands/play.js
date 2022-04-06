@@ -3,33 +3,33 @@ const ytdl = require("ytdl-core");
 const YouTubeAPI = require("simple-youtube-api");
 const scdl = require("soundcloud-downloader").default;
 const https = require("https");
-const { YOUTUBE_API_KEY, SOUNDCLOUD_CLIENT_ID, DEFAULT_VOLUME } = require("../util/PreobotUtil");
+const { YOUTUBE_API_KEY, SOUNDCLOUD_CLIENT_ID, DEFAULT_VOLUME } = require("../config.json");
 const youtube = new YouTubeAPI(YOUTUBE_API_KEY);
 const { EMOJI_DONE } = require('../config.json');
 
 module.exports = {
   name: "play",
-  aliases: ["baja","bja","bajaa","ganna","p"],
+  aliases: ["p"],
   cooldown: 3,
-  description: "Plays audio from YouTube or Soundcloud",
+  description: "Plays audio from YouTube",
   async execute(message, args) {
     const { channel } = message.member.voice;
 
     const serverQueue = message.client.queue.get(message.guild.id);
-    if (!channel) return message.reply("You need to join a voice channel first!").catch(console.error);
+    if (!channel) return message.reply("¡Primero debes unirte a un canal de voz!").catch(console.error);
     if (serverQueue && channel !== message.guild.me.voice.channel)
-      return message.reply(`You must be in the same channel as ${message.client.user}`).catch(console.error);
+      return message.reply(`Debes estar en el mismo canal que ${message.client.user}`).catch(console.error);
 
     if (!args.length)
       return message
-        .reply(`Usage: **${message.client.prefix}play <YouTube URL | Song Name | Soundcloud URL>** <a:accept:779738945306886175>`)
+        .reply(`Usage: **${message.client.prefix}play <URL de YouTube Music | Nombre de la canción >**`)
         .catch(console.error);
 
     const permissions = channel.permissionsFor(message.client.user);
     if (!permissions.has("CONNECT"))
-      return message.reply("Cannot connect to voice channel, missing permissions");
+      return message.reply("No se puede conectar al canal de voz, faltan permisos");
     if (!permissions.has("SPEAK"))
-      return message.reply("I cannot speak in this voice channel, make sure I have the proper permissions!");
+      return message.reply("No puedo hablar en este canal de voz, ¡asegúrate de tener los permisos adecuados!");
 
     const search = args.join(" ");
     const videoPattern = /^(https?:\/\/)?(www\.)?(m\.)?(youtube\.com|youtu\.?be)\/.+$/gi;
@@ -52,14 +52,14 @@ module.exports = {
           if (res.statusCode == "302") {
             return message.client.commands.get("play").execute(message, [res.headers.location]);
           } else {
-            return message.reply("No content could be found at that url.").catch(console.error);
+            return message.reply("No se pudo encontrar contenido en esa URL.").catch(console.error);
           }
         });
       } catch (error) {
         console.error(error);
         return message.reply(error.message).catch(console.error);
       }
-      return message.reply("Following url redirection...").catch(console.error);
+      return message.reply("un segundo...").catch(console.error);
     }
 
     const queueConstruct = {
@@ -117,7 +117,7 @@ module.exports = {
     if (serverQueue) {
       serverQueue.songs.push(song);
       return serverQueue.textChannel
-        .send(`${EMOJI_DONE} - **${song.title}** has been added to the queue by ${message.author}`)
+        .send(` - **${song.title}** ha sido añadido a la lista`)
         .catch(console.error);
     }
 
@@ -133,7 +133,7 @@ module.exports = {
       console.error(error);
       message.client.queue.delete(message.guild.id);
       await channel.leave();
-      return message.channel.send(`Could not join the channel: ${error}`).catch(console.error);
+      return message.channel.send(`No se pudo unir al canal: ${error}`).catch(console.error);
       
     }
   }
@@ -141,4 +141,4 @@ module.exports = {
 
 
 
-console.log("Play cmd working")
+console.log("Play cmd funcionando")

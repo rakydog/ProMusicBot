@@ -4,7 +4,7 @@ const { SERVER_INVITE , BOT_ID } = require('../config.json');
 
 module.exports = {
   name: "support",
-  aliases: ["bug","suggest","suggestion","report"],
+  aliases: ["bug","suggest","suggestion","report","soporte"],
   description: "To get support server of bot or report some issue (bug)",
   execute(message, args) {
    
@@ -12,10 +12,10 @@ module.exports = {
       .setTitle(`**Support**`)
       .setDescription(
           
-        `Support for <@${BOT_ID}>,
+        `Apoyo para <@${BOT_ID}>,
         
 
-        Join our support server [CLICK HERE](${SERVER_INVITE})`
+        Únase a nuestro servidor de soporte [CLICK HERE](${SERVER_INVITE})`
         
       )
       .setURL(
@@ -27,4 +27,4 @@ module.exports = {
 };
 
 
-console.log("Support working")
+console.log("support funcionando")

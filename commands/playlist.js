@@ -2,7 +2,7 @@ const { MessageEmbed } = require("discord.js");
 const { play } = require("../include/play");
 const YouTubeAPI = require("simple-youtube-api");
 const scdl = require("soundcloud-downloader").default;
-const { YOUTUBE_API_KEY, SOUNDCLOUD_CLIENT_ID, MAX_PLAYLIST_SIZE } = require("../util/PreobotUtil");
+const { YOUTUBE_API_KEY, SOUNDCLOUD_CLIENT_ID, MAX_PLAYLIST_SIZE } = require("../config.json");
 const youtube = new YouTubeAPI(YOUTUBE_API_KEY);
 
 module.exports = {
@@ -16,18 +16,19 @@ module.exports = {
 
     if (!args.length)
       return message
-        .reply(`Usage: ${message.client.prefix}playlist <YouTube Playlist URL | Playlist Name>`)
+        .reply(`Usage: ${message.client.prefix}playlist <URL de la lista de reproducción de YouTube | Nombre de la lista de reproducción>`)
         .catch(console.error);
-    if (!channel) return message.reply("You need to join a voice channel first!").catch(console.error);
+    if (!channel) return message.reply("¡Primero debes unirte a un canal de voz!").catch(console.error);
 
     const permissions = channel.permissionsFor(message.client.user);
     if (!permissions.has("CONNECT"))
-      return message.reply("Cannot connect to voice channel, missing permissions");
+      return message.reply("No se puede conectar al canal de voz, faltan permisos");
     if (!permissions.has("SPEAK"))
-      return message.reply("I cannot speak in this voice channel, make sure I have the proper permissions!");
+      return message.reply("No puedo hablar en este canal de voz, ¡asegúrate de tener los permisos adecuados!");
 
     if (serverQueue && channel !== message.guild.me.voice.channel)
-      return message.reply(`You must be in the same channel as ${message.client.user}`).catch(console.error);
+      return message.reply(`Debes estar en el mismo canal que
+${message.client.user}`).catch(console.error);
 
     const search = args.join(" ");
     const pattern = /^.*(youtu.be\/|list=)([^#\&\?]*).*/gi;
@@ -53,11 +54,11 @@ module.exports = {
         videos = await playlist.getVideos(MAX_PLAYLIST_SIZE || 10, { part: "snippet" });
       } catch (error) {
         console.error(error);
-        return message.reply("Playlist not found :(").catch(console.error);
+        return message.reply("Lista de reproducción no encontrada :(").catch(console.error);
       }
     } else if (scdl.isValidUrl(args[0])) {
       if (args[0].includes("/sets/")) {
-        message.channel.send("⌛ fetching the playlist...");
+        message.channel.send(" obteniendo la lista de reproducción...");
         playlist = await scdl.getSetInfo(args[0], SOUNDCLOUD_CLIENT_ID);
         videos = playlist.tracks.map((track) => ({
           title: track.title,
@@ -96,9 +97,9 @@ module.exports = {
 
     if (playlistEmbed.description.length >= 2048)
       playlistEmbed.description =
-        playlistEmbed.description.substr(0, 2007) + "\nAll songs are added type `+queue`/`+q`";
+        playlistEmbed.description.substr(0, 2007) + "";
 
-    message.channel.send(`${message.author} Started a playlist`, playlistEmbed);
+    message.channel.send(` Comenzó una lista de reproducción`, playlistEmbed);
 
     if (!serverQueue) {
       message.client.queue.set(message.guild.id, queueConstruct);
@@ -111,11 +112,11 @@ module.exports = {
         console.error(error);
         message.client.queue.delete(message.guild.id);
         await channel.leave();
-        return message.channel.send(`Could not join the channel: ${error.message}`).catch(console.error);
+        return message.channel.send(`No se pudo unir al canal: ${error.message}`).catch(console.error);
       }
     }
   }
 };
 
 
-console.log("Playlist cmd working")
+console.log("Playlist cmd funcionando")
